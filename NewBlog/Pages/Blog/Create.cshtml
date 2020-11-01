@@ -1,0 +1,42 @@
+﻿@page
+@model NewBlog.Pages.Blog.CreateModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>New Post</h1>
+<hr />
+<div class="row">
+    <div class="col-md-12">
+        <form method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Post.PostTitle" class="control-label"></label>
+                <input asp-for="Post.PostTitle" class="form-control" />
+                <span asp-validation-for="Post.PostTitle" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Post.PostContent" class="control-label"></label>
+                <textarea asp-for="Post.PostContent" class="form-control"></textarea>
+                <span asp-validation-for="Post.PostContent" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Post.ImageUrl" class="control-label"></label>
+                <input asp-for="Post.ImageUrl" class="form-control" />
+                <span asp-validation-for="Post.ImageUrl" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-success" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-page="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

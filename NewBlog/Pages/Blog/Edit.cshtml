@@ -1,0 +1,49 @@
+﻿@page
+@model NewBlog.Pages.Blog.EditModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+<hr />
+
+<h4>Post</h4>
+<hr />
+    <div class="row">
+        <div class="col-md-12">
+            <form method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Post.PostId" />
+                <input type="hidden" asp-for="Post.UserId" />
+                <input type="hidden" asp-for="Post.DatePosted" />
+                <div class="form-group">
+                    <label asp-for="Post.PostTitle" class="control-label"></label>
+                    <input asp-for="Post.PostTitle" class="form-control" />
+                    <span asp-validation-for="Post.PostTitle" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Post.PostContent" class="control-label"></label>
+                    <textarea asp-for="Post.PostContent" class="form-control"></textarea>
+                    <span asp-validation-for="Post.PostContent" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Post.ImageUrl" class="control-label"></label>
+                    <input asp-for="Post.ImageUrl" class="form-control" />
+                    <span asp-validation-for="Post.ImageUrl" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-success" />
+                </div>
+            </form>
+        </div>
+    </div>
+    
+
+<div>
+    <a asp-page="./Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,77 @@
+﻿@page "{id}"
+@model NewBlog.Pages.Blog.PostModel
+
+@{
+    ViewData["Title"] = "Post";
+}
+
+<div style="margin-bottom: 1em">
+    <a asp-page="./Index" class="btn btn-success">Back to List</a>
+    @if (User.Identity.GetUserId() == Model.Post.UserId.ToString() || User.IsInRole("admin"))
+    {
+        <a asp-page="./Edit" asp-route-id="@Model.Post.PostId" class="btn btn-warning">Edit</a>
+        <a asp-page="./Delete" asp-route-id="@Model.Post.PostId" class="btn btn-danger">Delete</a>
+    }
+</div>
+<div class="card">
+    <div class="card-body">
+        <h1>@Html.DisplayFor(model => model.Post.PostTitle)</h1>
+        <p class="lead">
+            By @Html.DisplayFor(model => model.Post.User.Login)
+            @if (User.Identity.GetUserId() == Model.Post.UserId.ToString())
+            {
+                <span> (you)</span>
+            }
+        </p>
+        <hr />
+        @if (Model.Post.ImageUrl != null)
+        {
+            <img class="card-img-top img-fluid" style="object-fit: cover; max-width: 100%; max-height: 15em" src="@Html.DisplayFor(modelItem => Model.Post.ImageUrl)" alt="@Html.DisplayFor(modelItem => Model.Post.PostTitle)">
+            <hr />
+        }
+        <div>
+            <p>@Html.Raw(Model.Post.HtmlBody())</p>
+        </div>
+        <hr />
+        <small>Posted at <time>@Model.Post.DatePosted</time></small>
+        @if (Model.Post.DateEdited != null)
+        {
+            <small> | Edited at <time>@Model.Post.DateEdited</time></small>
+        }
+    </div>
+</div>
+<hr />
+<div class="card">
+    <h5 class="card-header">Leave a comment:</h5>
+    <div class="card-body">
+        <partial name="_CommentFormPartial" model="Model.NewComment" />
+    </div>
+</div>
+@foreach (var comment in Model.Comments)
+{
+    <div class="card">
+        <div class="card-body">
+            <div>
+                <p class="lead">
+                    <b>@Html.DisplayFor(modelItem => comment.User.Login)</b>
+                    @if (comment.UserId.ToString() == User.Identity.GetUserId())
+                    {
+                        <span> (you)</span>
+                    }
+                </p>
+                <p class="card-text">@Html.DisplayFor(modelItem => comment.CommentContent)</p>
+                <p class="card-text"><small class="text-muted">Posted at <time>@Html.DisplayFor(modelItem => comment.CommentDate)</time></small></p>
+                @if (comment.UserId.ToString() == User.Identity.GetUserId() || User.IsInRole("admin"))
+                {
+                    <form method="post" onclick="return confirm('Are you sure you want to delete your comment?')">
+                        <button class="btn btn-danger" asp-page-handler="deleteComment" asp-route-id="@comment.CommentId">Delete</button>
+                    </form>
+                }
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

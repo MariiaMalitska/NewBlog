@@ -1,0 +1,66 @@
+﻿@page
+@model NewBlog.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostTitle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].DatePosted)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].DateEdited)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].PostContent)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].ImageUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Post[0].User)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Post) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostTitle)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DatePosted)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateEdited)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PostContent)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ImageUrl)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.User.Email)
+            </td>
+            <td>
+                <a asp-page="./Edit" asp-route-id="@item.PostId">Edit</a> |
+                <a asp-page="./Details" asp-route-id="@item.PostId">Details</a> |
+                <a asp-page="./Delete" asp-route-id="@item.PostId">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,72 @@
+﻿@page
+@model NewBlog.Pages.Blog.IndexModel
+@using System.Security.Claims
+
+@{
+    ViewData["Title"] = "Blog";
+}
+
+<div class="container">
+    <div class="row align-items-center">
+        <div class="col">
+            <h1>Blog</h1>
+        </div>
+        <div class="col" style="text-align:right">
+            @if (User.Identity.IsAuthenticated)
+            {
+                <p>
+                    <a class="btn btn-success" asp-page="Create">New Post</a>
+                </p>
+            }
+        </div>
+    </div>
+</div>
+<hr />
+@foreach (var item in Model.Post)
+{
+<div class="card" style="margin-bottom:2em">
+    @if (item.ImageUrl != null)
+    {
+        <a asp-page="./Post" asp-route-id="@item.PostId">
+            <img class="card-img-top img-fluid" style="object-fit: cover; max-height: 10em" src="@Html.DisplayFor(modelItem => item.ImageUrl)" alt="@Html.DisplayFor(modelItem => item.PostTitle)">
+        </a>
+    }
+<div class="card-header" style="transform: rotate(0);">
+    <h5 class="card-title">@Html.DisplayFor(modelItem => item.PostTitle)</h5>
+    <a asp-page="./Post" asp-route-id="@item.PostId" class="stretched-link"></a>
+    <p class="card-text">
+        <small class="text-muted">
+            By <b>@Html.DisplayFor(modelItem => item.User.Login)</b>
+            @if (@item.UserId.ToString() == User.Identity.GetUserId())
+            {
+                <span> (you)</span>
+            }
+        </small>
+    </p>
+</div>
+    <div class="card-body">
+        <div style="transform: rotate(0); margin-bottom: 1em">
+            <a asp-page="./Post" asp-route-id="@item.PostId" class="stretched-link"></a>
+            <div class="card-text h-50 d-inline-block post-card-content" >
+                @Html.Raw(item.HtmlBody())
+                <div class="fade-element"></div>
+            </div>
+            <p class="card-text">
+                <small class="text-muted">Posted at <time>@item.DatePosted</time></small>
+                @if (item.DateEdited != null)
+                {
+                    <small class="text-muted"> | Edited at <time>@item.DateEdited</time></small>
+                }
+            </p>
+        </div>
+        <a asp-page="./Post" asp-route-id="@item.PostId" class="btn btn-success">See full</a>
+        @if (@item.UserId.ToString() == User.Identity.GetUserId() || User.IsInRole("admin"))
+        {
+            <a asp-page="./Edit" asp-route-id="@item.PostId" class="btn btn-warning">Edit</a>
+            <a asp-page="./Delete" asp-route-id="@item.PostId" class="btn btn-danger">Delete</a>
+        }
+    </div>
+</div>
+}
+
+

@@ -1,0 +1,17 @@
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration configuration
+@model Comment
+
+<form id="commentForm" asp-page="Post" asp-page-handler="addComment" asp-anti-forgery="false" method="post">
+    <div asp-validation-summary="ModelOnly"></div>
+    <div class="form-group">
+        <textarea asp-for="CommentContent" class="form-control"></textarea>
+        <span asp-validation-for="CommentContent" class="text-danger"></span>
+    </div>
+    <div class="g-recaptcha" data-sitekey="@(configuration.GetValue<String>("reCAPTCHA:SiteKey"))"></div>
+    <input type="submit" value="Send" class="btn btn-success" />
+</form>
+
+@section Scripts {
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+}
