@@ -24,7 +24,7 @@ namespace NewBlog.Pages.Blog
         public async Task OnGetAsync()
         {
             Post = await _context.Posts
-                .Include(p => p.User).ToListAsync();
+                .Include(p => p.User).OrderByDescending(p=>(p.DateEdited==null ? p.DatePosted : p.DateEdited)).ToListAsync();
         }
     }
 }

@@ -62,7 +62,7 @@ namespace NewBlog.Pages.Blog
                 return NotFound();
             }
 
-            Comments = await _context.Comments.Where(c=>c.PostId == Post.PostId).Include(c => c.User).ToListAsync();
+            Comments = await _context.Comments.Where(c=>c.PostId == Post.PostId).Include(c => c.User).OrderByDescending(c=>c.CommentDate).ToListAsync();
 
             return Page();
         }
