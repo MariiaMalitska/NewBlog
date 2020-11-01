@@ -48,7 +48,19 @@ namespace NewBlog.Pages.Blog
         [BindProperty(SupportsGet = true)]
         public int Id { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public int CurrentPage { get; set; } = 1;
+
+        public int Count { get; set; }
+
+        public int PageSize { get; set; } = 10;
+
+        public int TotalPages => (int)Math.Ceiling(decimal.Divide(Count, PageSize));
+
+        public bool EnablePrevious => CurrentPage > 1;
+
+        public bool EnableNext => CurrentPage < TotalPages;
+
+        public async Task<IActionResult> OnGetAsync(int? id, int commentPage)
         {
             if (id == null)
             {
@@ -62,7 +74,15 @@ namespace NewBlog.Pages.Blog
                 return NotFound();
             }
 
-            Comments = await _context.Comments.Where(c=>c.PostId == Post.PostId).Include(c => c.User).OrderByDescending(c=>c.CommentDate).ToListAsync();
+            CurrentPage = commentPage == 0 ? 1 : commentPage;
+
+            Count = _context.Comments.Where(c => c.PostId == Post.PostId).Count();
+
+            if (CurrentPage > TotalPages)
+                CurrentPage = TotalPages;
+
+            Comments = await _context.Comments.Where(c=>c.PostId == Post.PostId).OrderByDescending(c => c.CommentDate)
+                .Skip((CurrentPage - 1) * PageSize).Take(PageSize).Include(c => c.User).ToListAsync();
 
             return Page();
         }
